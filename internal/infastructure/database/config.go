@@ -2,27 +2,16 @@ package database
 
 import (
 	"os"
-	"time"
 )
 
 type config struct {
-	host     string
-	database string
-	port     string
-	driver   string
-	user     string
-	password string
-
-	ctxTimeout time.Duration
+	file   string
+	driver string
 }
 
 func newConfigSqlite() *config {
 	return &config{
-		host:     os.Getenv("SQLITE_HOST"),
-		database: os.Getenv("SQLITE_DATABASE"),
-		port:     os.Getenv("SQLITE_PORT"),
-		driver:   os.Getenv("SQLITE_DRIVER"),
-		user:     os.Getenv("SQLITE_USER"),
-		password: os.Getenv("SQLITE_PASSWORD"),
+		file:   os.Getenv("SQLITE_FILE"),
+		driver: os.Getenv("SQLITE_DRIVER"),
 	}
 }

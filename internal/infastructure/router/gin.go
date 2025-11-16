@@ -12,7 +12,6 @@ import (
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/api/action"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/logger"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/repository"
-	"github.com/florian-renfer/freelancing-application-monitor/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,6 +33,7 @@ func newGinServer(
 	return &ginEngine{
 		router:     gin.New(),
 		log:        log,
+		db:         db,
 		port:       port,
 		ctxTimeout: t,
 	}
@@ -79,24 +79,7 @@ func (g ginEngine) Listen() {
 }
 
 func (g ginEngine) setAppHandlers(router *gin.Engine) {
-	router.POST("/v1/applications", g.createApplication())
 	router.GET("/v1/health", g.healthcheck())
-}
-
-func (g ginEngine) createApplication() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var (
-			uc = usecase.NewCreateApplicationInteractor(
-				repository.NewApplicationSQL(g.db),
-				presenter.NewCreateApplicationPresenter(),
-				g.ctxTimeout,
-			)
-
-			act = action.NewCreateApplicationAction()
-		)
-
-		act.Execute(c.Writer, c.Request)
-	}
 }
 
 func (g ginEngine) healthcheck() gin.HandlerFunc {

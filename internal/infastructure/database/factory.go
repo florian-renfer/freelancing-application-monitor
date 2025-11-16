@@ -17,7 +17,7 @@ const (
 func NewDatabaseSQLFactory(instance int) (repository.SQL, error) {
 	switch instance {
 	case InstanceSqlite:
-		return NewSqliteHandler()
+		return NewSqliteHandler(newConfigSqlite())
 	default:
 		return nil, errInvalidSQLDatabaseInstance
 	}
