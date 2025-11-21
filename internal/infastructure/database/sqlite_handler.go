@@ -30,12 +30,8 @@ type (
 )
 
 func NewSqliteHandler(c *config) (*sqliteHandler, error) {
-	var ds = fmt.Sprintf(
-		"file:%s?cache=shared&mode=memory",
-		c.file,
-	)
+	var ds = fmt.Sprintf("file:%s", c.file)
 
-	fmt.Println(ds)
 	db, err := sql.Open(c.driver, ds)
 	if err != nil {
 		return &sqliteHandler{}, err
@@ -74,7 +70,7 @@ func (s sqliteRow) Scan(dest ...any) error {
 	return nil
 }
 
-func (s sqliteRows) Scan(dest ...interface{}) error {
+func (s sqliteRows) Scan(dest ...any) error {
 	if err := s.rows.Scan(dest...); err != nil {
 		return err
 	}

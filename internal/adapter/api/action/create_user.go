@@ -10,29 +10,29 @@ import (
 	"github.com/florian-renfer/freelancing-application-monitor/internal/usecase"
 )
 
-type CreateApplicationAction struct {
-	uc  usecase.CreateApplicationUseCase
+type CreateUserAction struct {
+	uc  usecase.CreateUserUseCase
 	log logger.Logger
 }
 
-func NewCreateApplicationAction(uc usecase.CreateApplicationUseCase, log logger.Logger) CreateApplicationAction {
-	return CreateApplicationAction{
+func NewCreateUserAction(uc usecase.CreateUserUseCase, log logger.Logger) CreateUserAction {
+	return CreateUserAction{
 		uc:  uc,
 		log: log,
 	}
 }
 
-func (a CreateApplicationAction) Execute(w http.ResponseWriter, r *http.Request) {
-	const logKey = "create_application"
+func (a CreateUserAction) Execute(w http.ResponseWriter, r *http.Request) {
+	const logKey = "create_user"
 
-	var input usecase.CreateApplicationInput
+	var input usecase.CreateUserInput
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		logging.NewError(
 			a.log,
 			err,
 			logKey,
 			http.StatusBadRequest,
-		).Log("error when decoding json")
+		).Log("error decoding json")
 
 		response.NewError(err, http.StatusBadRequest).Send(w)
 		return
@@ -59,12 +59,12 @@ func (a CreateApplicationAction) Execute(w http.ResponseWriter, r *http.Request)
 			err,
 			logKey,
 			http.StatusInternalServerError,
-		).Log("error when creating a new application")
+		).Log("error creating user")
 
 		response.NewError(err, http.StatusInternalServerError).Send(w)
 		return
 	}
-	logging.NewInfo(a.log, logKey, http.StatusCreated).Log("success creating application")
+	logging.NewInfo(a.log, logKey, http.StatusCreated).Log("success creating user")
 
 	response.NewSuccess(output, http.StatusCreated).Send(w)
 }
