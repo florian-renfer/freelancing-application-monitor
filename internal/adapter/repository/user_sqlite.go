@@ -87,3 +87,17 @@ func (u UserSQL) FindAll(ctx context.Context) ([]domain.User, error) {
 
 	return users, nil
 }
+
+func (u UserSQL) DeleteById(ctx context.Context, id uuid.UUID) error {
+	var query = "DELETE FROM users WHERE id = $1"
+
+	if err := u.db.ExecuteContext(
+		ctx,
+		query,
+		id,
+	); err != nil {
+		return errors.Wrap(err, "error deleting user")
+	}
+
+	return nil
+}

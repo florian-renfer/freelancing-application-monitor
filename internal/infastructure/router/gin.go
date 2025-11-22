@@ -14,6 +14,7 @@ import (
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/presenter"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/repository"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/usecase"
+	"github.com/google/uuid"
 
 	"github.com/gin-gonic/gin"
 )
@@ -167,7 +168,17 @@ func (g ginEngine) usersFind() gin.HandlerFunc {
 
 func (g ginEngine) usersDelete() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		action.HealthCheck(c.Writer, c.Request)
+		var (
+			uc = usecase.NewDeleteUserInteractor(
+				repository.NewUserSQL(g.db),
+				g.ctxTimeout,
+			)
+
+			act = action.NewDeleteUserAction(uc, g.log)
+			id  = usecase.DeleteUserInput(uuid.MustParse(c.Param("id")))
+		)
+
+		act.Execute(c.Writer, c.Request, id)
 	}
 }
 
