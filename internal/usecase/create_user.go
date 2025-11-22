@@ -31,7 +31,7 @@ type (
 	// CreateUserOutput output data
 	CreateUserOutput struct {
 		ID          uuid.UUID `json:"id"`
-		Email       string    `json:"title"`
+		Email       string    `json:"email"`
 		Firstname   string    `json:"firstname"`
 		Lastname    string    `json:"lastname"`
 		DateOfBirth time.Time `json:"date_of_birth"`

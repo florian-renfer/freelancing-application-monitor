@@ -2,8 +2,10 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"github.com/florian-renfer/freelancing-application-monitor/internal/domain"
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 )
 
@@ -17,7 +19,7 @@ func NewUserSQL(db SQL) UserSQL {
 	}
 }
 
-func (a UserSQL) Create(ctx context.Context, user domain.User) (domain.User, error) {
+func (u UserSQL) Create(ctx context.Context, user domain.User) (domain.User, error) {
 	var query = `
 		INSERT INTO 
 			users (id, email, password, firstname, lastname, date_of_birth, created_at, updated_at)
@@ -25,7 +27,7 @@ func (a UserSQL) Create(ctx context.Context, user domain.User) (domain.User, err
 			($1, $2, $3, $4, $5, $6, $7, $8)
 	`
 
-	if err := a.db.ExecuteContext(
+	if err := u.db.ExecuteContext(
 		ctx,
 		query,
 		user.ID(),
@@ -41,4 +43,47 @@ func (a UserSQL) Create(ctx context.Context, user domain.User) (domain.User, err
 	}
 
 	return user, nil
+}
+
+func (u UserSQL) FindAll(ctx context.Context) ([]domain.User, error) {
+	var query = "SELECT id, email, firstname, lastname, date_of_birth, created_at, updated_at FROM users"
+
+	rows, err := u.db.QueryContext(ctx, query)
+	if err != nil {
+		return []domain.User{}, errors.Wrap(err, "error listing users")
+	}
+
+	var users = make([]domain.User, 0)
+	for rows.Next() {
+		var (
+			ID          uuid.UUID
+			Email       string
+			Firstname   string
+			Lastname    string
+			DateOfBirth time.Time
+			CreatedAt   time.Time
+			UpdatedAt   time.Time
+		)
+		if err = rows.Scan(&ID, &Email, &Firstname, &Lastname, &DateOfBirth, &CreatedAt, &UpdatedAt); err != nil {
+			return []domain.User{}, errors.Wrap(err, "error listing users")
+		}
+
+		users = append(users, domain.NewUser(
+			ID,
+			Email,
+			"",
+			Firstname,
+			Lastname,
+			DateOfBirth,
+			CreatedAt,
+			UpdatedAt,
+		))
+	}
+	defer rows.Close()
+
+	if err = rows.Err(); err != nil {
+		return []domain.User{}, err
+	}
+
+	return users, nil
 }

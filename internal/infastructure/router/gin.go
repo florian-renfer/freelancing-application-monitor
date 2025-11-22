@@ -145,7 +145,17 @@ func (g ginEngine) authLogout() gin.HandlerFunc {
 
 func (g ginEngine) usersFindAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		action.HealthCheck(c.Writer, c.Request)
+		var (
+			uc = usecase.NewFindAllUserInteractor(
+				repository.NewUserSQL(g.db),
+				presenter.NewFindAllUserPresenter(),
+				g.ctxTimeout,
+			)
+
+			act = action.NewFindAllUserAction(uc, g.log)
+		)
+
+		act.Execute(c.Writer, c.Request)
 	}
 }
 

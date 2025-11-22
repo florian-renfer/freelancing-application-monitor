@@ -21,7 +21,7 @@ type (
 
 	UserRepository interface {
 		Create(context.Context, User) (User, error)
-		// FindAll(context.Context) ([]User, error)
+		FindAll(context.Context) ([]User, error)
 		// Update(context.Context, User) (User, error)
 		// FindById(context.Context, uuid.UUID) (User, error)
 		// DeleteById(context.Context, uuid.UUID) error
