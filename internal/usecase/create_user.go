@@ -16,10 +16,10 @@ type (
 
 	// CreateUserInput input data
 	CreateUserInput struct {
-		Email       string    `json:"email" validate:"required"`
-		Password    string    `json:"password" validate:"required"`
-		Firstname   string    `json:"firstname" validate:"required"`
-		Lastname    string    `json:"lastname" validate:"required"`
+		Email       string    `json:"email" validate:"required,email,max=255"`
+		Password    string    `json:"password" validate:"required,min=8,max=64"`
+		Firstname   string    `json:"firstname" validate:"required,min=2,max=64"`
+		Lastname    string    `json:"lastname" validate:"required,min=2,max=64"`
 		DateOfBirth time.Time `json:"date_of_birth" validate:"required"`
 	}
 

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/api/action"
+	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/api/validator"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/logger"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/presenter"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/repository"
@@ -22,6 +23,7 @@ import (
 type ginEngine struct {
 	router     *gin.Engine
 	log        logger.Logger
+	validator  validator.Validator
 	db         repository.SQL
 	port       Port
 	ctxTimeout time.Duration
@@ -30,12 +32,14 @@ type ginEngine struct {
 func newGinServer(
 	port Port,
 	log logger.Logger,
+	validator validator.Validator,
 	db repository.SQL,
 	t time.Duration,
 ) *ginEngine {
 	return &ginEngine{
 		router:     gin.New(),
 		log:        log,
+		validator:  validator,
 		db:         db,
 		port:       port,
 		ctxTimeout: t,
@@ -125,7 +129,7 @@ func (g ginEngine) authRegister() gin.HandlerFunc {
 				g.ctxTimeout,
 			)
 
-			act = action.NewCreateUserAction(uc, g.log)
+			act = action.NewCreateUserAction(uc, g.log, g.validator)
 		)
 
 		act.Execute(c.Writer, c.Request)

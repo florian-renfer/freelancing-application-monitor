@@ -6,20 +6,36 @@ import (
 
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/api/logging"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/api/response"
+	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/api/validator"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/logger"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/usecase"
 )
 
 type CreateUserAction struct {
-	uc  usecase.CreateUserUseCase
-	log logger.Logger
+	uc        usecase.CreateUserUseCase
+	log       logger.Logger
+	validator validator.Validator
 }
 
-func NewCreateUserAction(uc usecase.CreateUserUseCase, log logger.Logger) CreateUserAction {
+func NewCreateUserAction(uc usecase.CreateUserUseCase, log logger.Logger, validator validator.Validator) CreateUserAction {
 	return CreateUserAction{
-		uc:  uc,
-		log: log,
+		uc:        uc,
+		log:       log,
+		validator: validator,
 	}
+}
+
+func (a CreateUserAction) validateInput(input usecase.CreateUserInput) []string {
+	var msgs []string
+
+	err := a.validator.Validate(input)
+	if err != nil {
+		for _, msg := range a.validator.Messages() {
+			msgs = append(msgs, msg)
+		}
+	}
+
+	return msgs
 }
 
 func (a CreateUserAction) Execute(w http.ResponseWriter, r *http.Request) {
@@ -39,18 +55,17 @@ func (a CreateUserAction) Execute(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	// TODO: add validation
-	// if errs := a.validateInput(input); len(errs) > 0 {
-	// 	logging.NewError(
-	// 		a.log,
-	// 		response.ErrInvalidInput,
-	// 		logKey,
-	// 		http.StatusBadRequest,
-	// 	).Log("invalid input")
-	//
-	// 	response.NewErrorMessage(errs, http.StatusBadRequest).Send(w)
-	// 	return
-	// }
+	if errs := a.validateInput(input); len(errs) > 0 {
+		logging.NewError(
+			a.log,
+			response.ErrInvalidInput,
+			logKey,
+			http.StatusBadRequest,
+		).Log("invalid input")
+
+		response.NewErrorMessage(errs, http.StatusBadRequest).Send(w)
+		return
+	}
 
 	output, err := a.uc.Execute(r.Context(), input)
 	if err != nil {

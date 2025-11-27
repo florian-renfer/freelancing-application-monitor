@@ -12,12 +12,14 @@ An interactive monitor that helps you keeping an eye on your applications for fr
 
 ## 🚀 Features
 
-- Create users
-- List created users
+The application allows freelancers to keep track of their applications for freelance projects. It provides
+functionalities such as creating and updating applications, and checking for possible duplicates using artificial intelligence (AI).
 
 ## 📍 The Process
 
-The process and motivation need a clear description.
+The motivation behind this project is to create a tool that helps freelancers manage their applications more efficiently. This involves tracking the status of applications, deadlines, reminders, notes, and using AI to identify potential duplicate applications, etc.
+
+By reducing the administrative burden, freelancers can focus more on their core work and increase their chances of securing projects.
 
 ## 🚦 Running the Project
 
@@ -26,12 +28,24 @@ The process and motivation need a clear description.
 3. Run development server: `go run cmd/api/main.go`
 4. Execute requests against the server running on: `http://localhost:4000/v1/<api-endpoint>`
 
-## 🎞️ Preview
+## 🏎️ Roadmap
 
-For now, there's no preview - it's just API in the making.
-I will add a preview as soon as the UI is on the roadmap.
+- [ ] Application Tracking
+  - [ ] Create an Applcation
+  - [ ] Update an Applcation
+- [ ] AI-based Duplicate Detection
+- [ ] Unit Tests
+- [ ] Integration Tests
+- [ ] User Interface
+- [ ] User Authentication, OAuth2.0
 
 ## Uses Cases
+
+### Create Application
+
+```bash
+# This endpoint is not implemented yet.
+```
 
 ### Register User
 
@@ -43,9 +57,7 @@ curl -X POST http://localhost:4000/v1/auth/register\
     "password": "changeme",
     "firstname": "Max",
     "lastname": "Mustermann",
-    "date_of_birth": "2001-11-21T19:44:29.239Z",
-    "created_at": "2025-11-21T20:47:36.418456625+01:00",
-    "updated_at": "2025-11-21T20:47:36.418456675+01:00"
+    "date_of_birth": "2000-11-27T20:59:00.895974+01:00"
   }' | jq
 ```
 

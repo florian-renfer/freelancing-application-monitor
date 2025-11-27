@@ -7,6 +7,7 @@ import (
 	"github.com/florian-renfer/freelancing-application-monitor/internal/infastructure/database"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/infastructure/log"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/infastructure/router"
+	"github.com/florian-renfer/freelancing-application-monitor/internal/infastructure/validation"
 )
 
 func main() {
@@ -14,6 +15,7 @@ func main() {
 		Timeout(10 * time.Second).
 		Logger(log.InstanceSlogLogger).
 		Persistence(database.InstanceSqlite).
+		Validator(validation.InstanceGoPlayground).
 		WebServerPort("4000").
 		WebServer(router.InstanceGin)
 

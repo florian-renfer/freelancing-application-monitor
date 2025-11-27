@@ -5,15 +5,18 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/api/validator"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/logger"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/repository"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/infastructure/database"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/infastructure/log"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/infastructure/router"
+	"github.com/florian-renfer/freelancing-application-monitor/internal/infastructure/validation"
 )
 
 type config struct {
 	logger        logger.Logger
+	validator     validator.Validator
 	ctxTimeout    time.Duration
 	dbSQL         repository.SQL
 	webServerPort router.Port
@@ -66,10 +69,22 @@ func (c *config) WebServerPort(port string) *config {
 	return c
 }
 
+func (c *config) Validator(instance int) *config {
+	v, err := validation.NewValidatorFactory(instance)
+	if err != nil {
+		c.logger.Errorf("%s", err)
+		os.Exit(1)
+	}
+
+	c.validator = v
+	return c
+}
+
 func (c *config) WebServer(instance int) *config {
 	s, err := router.NewWebServerFactory(
 		instance,
 		c.logger,
+		c.validator,
 		c.dbSQL,
 		c.webServerPort,
 		c.ctxTimeout,
