@@ -224,7 +224,17 @@ func (g ginEngine) applicationsFindAll() gin.HandlerFunc {
 
 func (g ginEngine) applicationsCreate() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		action.HealthCheck(c.Writer, c.Request)
+		var (
+			uc = usecase.NewCreateApplicationInteractor(
+				repository.NewApplicationSQL(g.db),
+				presenter.NewCreateApplicationPresenter(),
+				g.ctxTimeout,
+			)
+
+			act = action.NewCreateApplicationAction(uc, g.validator, g.log)
+		)
+
+		act.Execute(c.Writer, c.Request)
 	}
 }
 

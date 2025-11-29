@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"net/url"
 	"time"
 
 	"github.com/florian-renfer/freelancing-application-monitor/internal/domain"
@@ -17,9 +16,11 @@ type (
 
 	// CreateApplicationInput input data
 	CreateApplicationInput struct {
-		Title       string  `json:"title" validate:"required"`
-		Description string  `json:"description" validate:"required"`
-		Url         url.URL `json:"url" validate:"required"`
+		Title       string                  `json:"title" validate:"required"`
+		Description string                  `json:"description" validate:"required"`
+		Url         string                  `json:"url" validate:"required,url"`
+		State       domain.ApplicationState `json:"state" validate:"required"`
+		AppliedAt   time.Time               `json:"applied_at" validate:"required"`
 	}
 
 	// CreateApplicationPresenter output port
@@ -29,11 +30,14 @@ type (
 
 	// CreateApplicationOutput output data
 	CreateApplicationOutput struct {
-		ID        string  `json:"id"`
-		Name      string  `json:"name"`
-		CPF       string  `json:"cpf"`
-		Balance   float64 `json:"balance"`
-		CreatedAt string  `json:"created_at"`
+		Id          uuid.UUID `json:"id"`
+		Title       string    `json:"title"`
+		Description string    `json:"description"`
+		Url         string    `json:"url"`
+		State       string    `json:"state"`
+		AppliedAt   time.Time `json:"applied_at"`
+		CreatedAt   time.Time `json:"created_at"`
+		UpdatedAt   time.Time `json:"updated_at"`
 	}
 
 	createApplicationInteractor struct {
@@ -65,6 +69,8 @@ func (a createApplicationInteractor) Execute(ctx context.Context, input CreateAp
 		input.Title,
 		input.Description,
 		input.Url,
+		input.State,
+		input.AppliedAt,
 		time.Now(),
 		time.Now(),
 	)

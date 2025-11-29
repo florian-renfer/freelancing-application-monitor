@@ -44,7 +44,15 @@ By reducing the administrative burden, freelancers can focus more on their core 
 ### Create Application
 
 ```bash
-# This endpoint is not implemented yet.
+curl -X POST http://localhost:4000/v1/applications\
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Java Entwickler | Hamburg gesucht",
+    "description": "Wir sind auf der Suche nach einem senior Java support Entwickler mit folgenden technischen und funktionalen Fähigkeiten...",
+    "url": "https://www.freelancermap.de/projekt/java-entwickler-hamburg-gesucht",
+    "state": "APPLIED",
+    "applied_at": "2025-11-27T20:59:00.895974+01:00"
+  }' | jq
 ```
 
 ### Register User

@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"net/url"
 	"time"
 
 	"github.com/florian-renfer/freelancing-application-monitor/internal/domain"
@@ -24,9 +23,9 @@ func NewApplicationSQL(db SQL) ApplicationSQL {
 func (a ApplicationSQL) Create(ctx context.Context, application domain.Application) (domain.Application, error) {
 	var query = `
 		INSERT INTO 
-			applications (id, title, description, url, applied_at, created_at)
+			applications (id, title, description, url, state, applied_at, created_at, updated_at)
 		VALUES 
-			($1, $2, $3, $4, $5, $6)
+			($1, $2, $3, $4, $5, $6, $7, $8)
 	`
 
 	if err := a.db.ExecuteContext(
@@ -36,8 +35,10 @@ func (a ApplicationSQL) Create(ctx context.Context, application domain.Applicati
 		application.Title(),
 		application.Description(),
 		application.Url(),
+		application.State().String(),
 		application.AppliedAt(),
 		application.CreatedAt(),
+		application.UpdatedAt(),
 	); err != nil {
 		return domain.Application{}, errors.Wrap(err, "error creating application")
 	}
@@ -59,9 +60,11 @@ func (a ApplicationSQL) FindAll(ctx context.Context) ([]domain.Application, erro
 			id          uuid.UUID
 			title       string
 			description string
-			url         url.URL
+			url         string
+			state       domain.ApplicationState
 			appliedAt   time.Time
 			createdAt   time.Time
+			updatedAt   time.Time
 		)
 
 		if err = rows.Scan(&id, &title, &description, &url, &appliedAt, &createdAt); err != nil {
@@ -73,8 +76,10 @@ func (a ApplicationSQL) FindAll(ctx context.Context) ([]domain.Application, erro
 			title,
 			description,
 			url,
+			state,
 			appliedAt,
 			createdAt,
+			updatedAt,
 		))
 	}
 	defer rows.Close()

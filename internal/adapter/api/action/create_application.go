@@ -6,20 +6,36 @@ import (
 
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/api/logging"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/api/response"
+	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/api/validator"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/adapter/logger"
 	"github.com/florian-renfer/freelancing-application-monitor/internal/usecase"
 )
 
 type CreateApplicationAction struct {
-	uc  usecase.CreateApplicationUseCase
-	log logger.Logger
+	uc        usecase.CreateApplicationUseCase
+	validator validator.Validator
+	log       logger.Logger
 }
 
-func NewCreateApplicationAction(uc usecase.CreateApplicationUseCase, log logger.Logger) CreateApplicationAction {
+func NewCreateApplicationAction(uc usecase.CreateApplicationUseCase, validator validator.Validator, log logger.Logger) CreateApplicationAction {
 	return CreateApplicationAction{
-		uc:  uc,
-		log: log,
+		uc:        uc,
+		validator: validator,
+		log:       log,
 	}
+}
+
+func (a CreateApplicationAction) validateInput(input usecase.CreateApplicationInput) []string {
+	var msgs []string
+
+	err := a.validator.Validate(input)
+	if err != nil {
+		for _, msg := range a.validator.Messages() {
+			msgs = append(msgs, msg)
+		}
+	}
+
+	return msgs
 }
 
 func (a CreateApplicationAction) Execute(w http.ResponseWriter, r *http.Request) {
@@ -39,18 +55,17 @@ func (a CreateApplicationAction) Execute(w http.ResponseWriter, r *http.Request)
 	}
 	defer r.Body.Close()
 
-	// TODO: add validation
-	// if errs := a.validateInput(input); len(errs) > 0 {
-	// 	logging.NewError(
-	// 		a.log,
-	// 		response.ErrInvalidInput,
-	// 		logKey,
-	// 		http.StatusBadRequest,
-	// 	).Log("invalid input")
-	//
-	// 	response.NewErrorMessage(errs, http.StatusBadRequest).Send(w)
-	// 	return
-	// }
+	if errs := a.validateInput(input); len(errs) > 0 {
+		logging.NewError(
+			a.log,
+			response.ErrInvalidInput,
+			logKey,
+			http.StatusBadRequest,
+		).Log("invalid input")
+
+		response.NewErrorMessage(errs, http.StatusBadRequest).Send(w)
+		return
+	}
 
 	output, err := a.uc.Execute(r.Context(), input)
 	if err != nil {

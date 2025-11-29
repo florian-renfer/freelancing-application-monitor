@@ -2,20 +2,25 @@ package domain
 
 import (
 	"context"
-	"net/url"
+	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type (
+	ApplicationState int
+
 	Application struct {
 		id          uuid.UUID
 		title       string
 		description string
-		url         url.URL
+		url         string
+		state       ApplicationState
 		appliedAt   time.Time
 		createdAt   time.Time
+		updatedAt   time.Time
 	}
 
 	ApplicationRepository interface {
@@ -24,14 +29,49 @@ type (
 	}
 )
 
-func NewApplication(id uuid.UUID, title, description string, url url.URL, appliedAt, createdAt time.Time) Application {
+const (
+	DRAFT ApplicationState = iota
+	APPLIED
+	OFFERED
+	ACCEPTED
+	REJECTED
+	WITHDRAWN
+	CLOSED
+)
+
+var (
+	errInvalidApplicationState = errors.New("invalid application state")
+	applicationStateStrings    = [...]string{"DRAFT", "APPLIED", "OFFERED", "ACCEPTED", "REJECTED", "WITHDRAWN", "CLOSED"}
+)
+
+func (s ApplicationState) String() string {
+	return [...]string{"DRAFT", "APPLIED", "OFFERED", "ACCEPTED", "REJECTED", "WITHDRAWN", "CLOSED"}[s]
+}
+
+func (s *ApplicationState) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		return err
+	}
+	for i, v := range applicationStateStrings {
+		if v == str {
+			*s = ApplicationState(i)
+			return nil
+		}
+	}
+	return errInvalidApplicationState
+}
+
+func NewApplication(id uuid.UUID, title, description string, url string, state ApplicationState, appliedAt, createdAt, updatedAt time.Time) Application {
 	return Application{
 		id:          id,
 		title:       title,
 		description: description,
 		url:         url,
-		appliedAt:   time.Now(),
-		createdAt:   time.Now(),
+		state:       state,
+		appliedAt:   appliedAt,
+		createdAt:   createdAt,
+		updatedAt:   updatedAt,
 	}
 }
 
@@ -47,8 +87,12 @@ func (a Application) Description() string {
 	return a.description
 }
 
-func (a Application) Url() url.URL {
+func (a Application) Url() string {
 	return a.url
+}
+
+func (a Application) State() ApplicationState {
+	return a.state
 }
 
 func (a Application) AppliedAt() time.Time {
@@ -57,4 +101,8 @@ func (a Application) AppliedAt() time.Time {
 
 func (a Application) CreatedAt() time.Time {
 	return a.createdAt
+}
+
+func (a Application) UpdatedAt() time.Time {
+	return a.updatedAt
 }
