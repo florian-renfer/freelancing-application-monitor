@@ -62,6 +62,10 @@ func (s *ApplicationState) UnmarshalJSON(data []byte) error {
 	return errInvalidApplicationState
 }
 
+func (s ApplicationState) MarshalJSON() ([]byte, error) {
+	return json.Marshal(s.String())
+}
+
 func NewApplication(id uuid.UUID, title, description string, url string, state ApplicationState, appliedAt, createdAt, updatedAt time.Time) Application {
 	return Application{
 		id:          id,

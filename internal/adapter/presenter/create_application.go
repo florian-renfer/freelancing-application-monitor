@@ -17,7 +17,7 @@ func (a createApplicationPresenter) Output(application domain.Application) useca
 		Title:       application.Title(),
 		Description: application.Description(),
 		Url:         application.Url(),
-		State:       application.State().String(),
+		State:       application.State(),
 		AppliedAt:   application.AppliedAt(),
 		CreatedAt:   application.CreatedAt(),
 		UpdatedAt:   application.UpdatedAt(),

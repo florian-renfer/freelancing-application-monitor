@@ -30,14 +30,14 @@ type (
 
 	// CreateApplicationOutput output data
 	CreateApplicationOutput struct {
-		Id          uuid.UUID `json:"id"`
-		Title       string    `json:"title"`
-		Description string    `json:"description"`
-		Url         string    `json:"url"`
-		State       string    `json:"state"`
-		AppliedAt   time.Time `json:"applied_at"`
-		CreatedAt   time.Time `json:"created_at"`
-		UpdatedAt   time.Time `json:"updated_at"`
+		Id          uuid.UUID               `json:"id"`
+		Title       string                  `json:"title"`
+		Description string                  `json:"description"`
+		Url         string                  `json:"url"`
+		State       domain.ApplicationState `json:"state"`
+		AppliedAt   time.Time               `json:"applied_at"`
+		CreatedAt   time.Time               `json:"created_at"`
+		UpdatedAt   time.Time               `json:"updated_at"`
 	}
 
 	createApplicationInteractor struct {
