@@ -8,6 +8,7 @@ An interactive monitor that helps you keeping an eye on your applications for fr
 ## ✨ Technologies
 
 - `Go`
+- `Gin`
 - `SQLite`
 
 ## 🚀 Features
@@ -39,9 +40,17 @@ By reducing the administrative burden, freelancers can focus more on their core 
 - [ ] User Interface
 - [ ] User Authentication, OAuth2.0
 
+## 📚 Lessons Learned
+
+- Implementing enumerated types using `iota` while ensuring a proper string representation for better readability and maintainability.
+- Implementing interfaces such as `Scnner` from `database/sql` package to convert database rows from primitive types to custom types.
+- Implementing interfaces such as `Unmarshaler` and `Marshaler` from `encoding/json` package to convert between JSON and custom types.
+
 ## Uses Cases
 
-### Create Application
+### Applcations
+
+#### Create Application
 
 ```bash
 curl -X POST http://localhost:4000/v1/applications\
@@ -55,7 +64,15 @@ curl -X POST http://localhost:4000/v1/applications\
   }' | jq
 ```
 
-### Register User
+#### List all Applcations
+
+```bash
+curl -X GET http://localhost:4000/v1/applications | jq
+```
+
+### Users
+
+#### Register User
 
 ```bash
 curl -X POST http://localhost:4000/v1/auth/register\
@@ -69,13 +86,13 @@ curl -X POST http://localhost:4000/v1/auth/register\
   }' | jq
 ```
 
-### List all Users
+#### List all Users
 
 ```bash
 curl http://localhost:4000/v1/users | jq
 ```
 
-### Delete User
+#### Delete User
 
 ```bash
 curl -X DELETE http://localhost:4000/v1/users/{user_id} | jq

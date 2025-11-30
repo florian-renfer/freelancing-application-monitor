@@ -48,6 +48,26 @@ func (s ApplicationState) String() string {
 	return [...]string{"DRAFT", "APPLIED", "OFFERED", "ACCEPTED", "REJECTED", "WITHDRAWN", "CLOSED"}[s]
 }
 
+func (s *ApplicationState) Scan(value any) error {
+	switch v := value.(type) {
+	case int64:
+		*s = ApplicationState(v)
+		return nil
+	case []byte:
+		return s.Scan(string(v))
+	case string:
+		for i, str := range applicationStateStrings {
+			if str == v {
+				*s = ApplicationState(i)
+				return nil
+			}
+		}
+		return errInvalidApplicationState
+	default:
+		return errInvalidApplicationState
+	}
+}
+
 func (s *ApplicationState) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {

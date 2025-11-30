@@ -9,20 +9,20 @@ import (
 	"github.com/florian-renfer/freelancing-application-monitor/internal/usecase"
 )
 
-type FindAllUserAction struct {
-	uc  usecase.FindAllUserUseCase
+type FindAllApplicationAction struct {
+	uc  usecase.FindAllApplicationUseCase
 	log logger.Logger
 }
 
-func NewFindAllUserAction(uc usecase.FindAllUserUseCase, log logger.Logger) FindAllUserAction {
-	return FindAllUserAction{
+func NewFindAllApplicationAction(uc usecase.FindAllApplicationUseCase, log logger.Logger) FindAllApplicationAction {
+	return FindAllApplicationAction{
 		uc:  uc,
 		log: log,
 	}
 }
 
-func (a FindAllUserAction) Execute(w http.ResponseWriter, r *http.Request) {
-	const logKey = "find_all_user"
+func (a FindAllApplicationAction) Execute(w http.ResponseWriter, r *http.Request) {
+	const logKey = "find_all_application"
 
 	output, err := a.uc.Execute(r.Context())
 	if err != nil {
@@ -31,12 +31,12 @@ func (a FindAllUserAction) Execute(w http.ResponseWriter, r *http.Request) {
 			err,
 			logKey,
 			http.StatusInternalServerError,
-		).Log("error finding all users")
+		).Log("error finding all applications")
 
 		response.NewError(err, http.StatusInternalServerError).Send(w)
 		return
 	}
-	logging.NewInfo(a.log, logKey, http.StatusCreated).Log("success finding all users")
+	logging.NewInfo(a.log, logKey, http.StatusCreated).Log("success finding all applications")
 
 	response.NewSuccess(output, http.StatusCreated).Send(w)
 }

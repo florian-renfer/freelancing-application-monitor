@@ -218,7 +218,17 @@ func (g ginEngine) projectsDelete() gin.HandlerFunc {
 
 func (g ginEngine) applicationsFindAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		action.HealthCheck(c.Writer, c.Request)
+		var (
+			uc = usecase.NewFindAllApplicationInteractor(
+				repository.NewApplicationSQL(g.db),
+				presenter.NewFindAllApplicationPresenter(),
+				g.ctxTimeout,
+			)
+
+			act = action.NewFindAllApplicationAction(uc, g.log)
+		)
+
+		act.Execute(c.Writer, c.Request)
 	}
 }
 

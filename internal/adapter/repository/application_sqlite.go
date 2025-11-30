@@ -67,7 +67,7 @@ func (a ApplicationSQL) FindAll(ctx context.Context) ([]domain.Application, erro
 			updatedAt   time.Time
 		)
 
-		if err = rows.Scan(&id, &title, &description, &url, &appliedAt, &createdAt); err != nil {
+		if err = rows.Scan(&id, &title, &description, &url, &state, &appliedAt, &createdAt, &updatedAt); err != nil {
 			return []domain.Application{}, errors.Wrap(err, "error listing applications")
 		}
 
