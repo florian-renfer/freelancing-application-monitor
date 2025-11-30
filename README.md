@@ -7,9 +7,16 @@ An interactive monitor that helps you keeping an eye on your applications for fr
 
 ## ✨ Technologies
 
+### API
+
 - `Go`
 - `Gin`
 - `SQLite`
+
+### UI
+
+- `Next.JS`
+- `Shadcn`
 
 ## 🚀 Features
 
@@ -31,9 +38,10 @@ By reducing the administrative burden, freelancers can focus more on their core 
 
 ## 🏎️ Roadmap
 
-- [ ] Application Tracking
-  - [ ] Create an Applcation
-  - [ ] Update an Applcation
+- [ ] Create an Applcation
+  - [x] Define API endpoint
+  - [ ] Define Constraints
+  - [ ] Add Validation
 - [ ] AI-based Duplicate Detection
 - [ ] Unit Tests
 - [ ] Integration Tests
@@ -43,10 +51,15 @@ By reducing the administrative burden, freelancers can focus more on their core 
 ## 📚 Lessons Learned
 
 - Implementing enumerated types using `iota` while ensuring a proper string representation for better readability and maintainability.
-- Implementing interfaces such as `Scnner` from `database/sql` package to convert database rows from primitive types to custom types.
+- Implementing interfaces such as `Scanner` from `database/sql` package to convert database rows from primitive types to custom types.
 - Implementing interfaces such as `Unmarshaler` and `Marshaler` from `encoding/json` package to convert between JSON and custom types.
 
 ## Uses Cases
+
+> [!WARNING]
+> The endpoints are listed for documentation purposes only. There is no
+> guarantee of correct behavior, input validation, or anything else that would
+> prevent the application or database from breaking.
 
 ### Applcations
 
