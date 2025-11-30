@@ -9,14 +9,14 @@ An interactive monitor that helps you keeping an eye on your applications for fr
 
 ### API
 
-- `Go`
-- `Gin`
-- `SQLite`
+- Go
+- Gin
+- SQLite
 
 ### UI
 
-- `Next.JS`
-- `Shadcn`
+- Next.JS
+- Shadcn
 
 ## 🚀 Features
 
@@ -31,10 +31,20 @@ By reducing the administrative burden, freelancers can focus more on their core 
 
 ## 🚦 Running the Project
 
-1. Clone the repository
-2. Install dependencies: `go mod download`
-3. Run development server: `go run cmd/api/main.go`
-4. Execute requests against the server running on: `http://localhost:4000/v1/<api-endpoint>`
+1. Clone the repository: `git clone git@github.com:florian-renfer/freelancing-application-monitor.git`
+2. Change directory: `cd freelancing-application-monitor`
+
+### Running the API
+
+1. Install dependencies: `go mod download`
+2. Run development server: `go run cmd/api/main.go`
+3. Execute requests against the server running on: `http://localhost:4000/v1/<api-endpoint>`
+
+### Running the UI
+
+1. Change directory: `cd web`
+2. Install dependencies: `npm install`
+3. Run development server: `npm run dev`
 
 ## 🏎️ Roadmap
 
@@ -50,16 +60,20 @@ By reducing the administrative burden, freelancers can focus more on their core 
 
 ## 📚 Lessons Learned
 
-- Implementing enumerated types using `iota` while ensuring a proper string representation for better readability and maintainability.
-- Implementing interfaces such as `Scanner` from `database/sql` package to convert database rows from primitive types to custom types.
-- Implementing interfaces such as `Unmarshaler` and `Marshaler` from `encoding/json` package to convert between JSON and custom types.
+- Implementing enumerated types using `iota` while ensuring a proper string representation for better readability and maintainability
+- Implementing interfaces such as `Scanner` from `database/sql` package to convert database rows from primitive types to custom types
+- Implementing interfaces such as `Unmarshaler` and `Marshaler` from `encoding/json` package to convert between JSON and custom types
 
-## Uses Cases
+## Use Cases
 
 > [!WARNING]
 > The endpoints are listed for documentation purposes only. There is no
 > guarantee of correct behavior, input validation, or anything else that would
 > prevent the application or database from breaking.
+
+> [!NOTE]
+> I'm planning on releasing an OpenAPI specification once the API is in a stable
+> state.
 
 ### Applcations
 
