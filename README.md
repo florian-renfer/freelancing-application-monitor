@@ -101,9 +101,19 @@ curl -X POST http://localhost:4000/v1/applications\
 curl -X GET http://localhost:4000/v1/applications | jq
 ```
 
+#### Find Application
+
+```bash
+curl -X GET http://localhost:4000/v1/applications/{application_id} | jq
+```
+
 ### Users
 
 #### Register User
+
+> [!CAUTION]
+> The approach of registering users manually will be discontinued and is marked as deprecated.
+> I'm aiming to implement OAuth / SSO via Google and GitHub in the first place.
 
 ```bash
 curl -X POST http://localhost:4000/v1/auth/register\
