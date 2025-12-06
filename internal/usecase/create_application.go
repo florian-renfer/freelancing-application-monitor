@@ -16,11 +16,11 @@ type (
 
 	// CreateApplicationInput input data
 	CreateApplicationInput struct {
-		Title       string                  `json:"title" validate:"required"`
-		Description string                  `json:"description" validate:"required"`
-		Url         string                  `json:"url" validate:"required,url"`
+		Title       string                  `json:"title" validate:"required,min=10,max=255"`
+		Description string                  `json:"description" validate:"required,min=10,max=3000"`
+		Url         string                  `json:"url" validate:"required,url,startswith=https://,max=512"`
 		State       domain.ApplicationState `json:"state" validate:"required"`
-		AppliedAt   time.Time               `json:"applied_at" validate:"required"`
+		AppliedAt   time.Time               `json:"applied_at" validate:"required,lt"`
 	}
 
 	// CreateApplicationPresenter output port

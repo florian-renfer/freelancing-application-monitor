@@ -23,6 +23,10 @@ An interactive monitor that helps you keeping an eye on your applications for fr
 The application allows freelancers to keep track of their applications for freelance projects. It provides
 functionalities such as creating and updating applications, and checking for possible duplicates using artificial intelligence (AI).
 
+### Assumptions
+
+The API assumes that data entering the `usecase` layer is validated before exectuing the actual usecase.
+
 ## 📍 The Process
 
 The motivation behind this project is to create a tool that helps freelancers manage their applications more efficiently. This involves tracking the status of applications, deadlines, reminders, notes, and using AI to identify potential duplicate applications, etc.
@@ -113,14 +117,10 @@ curl -X POST http://localhost:4000/v1/auth/register\
   }' | jq
 ```
 
-#### List all Users
-
-```bash
-curl http://localhost:4000/v1/users | jq
-```
+````
 
 #### Delete User
 
 ```bash
 curl -X DELETE http://localhost:4000/v1/users/{user_id} | jq
-```
+````
