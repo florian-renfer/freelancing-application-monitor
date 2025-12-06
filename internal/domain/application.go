@@ -26,6 +26,7 @@ type (
 	ApplicationRepository interface {
 		Create(context.Context, Application) (Application, error)
 		FindAll(context.Context) ([]Application, error)
+		FindById(context.Context, uuid.UUID) (Application, error)
 	}
 )
 

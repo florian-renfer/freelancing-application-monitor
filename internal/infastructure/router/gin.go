@@ -256,7 +256,18 @@ func (g ginEngine) applicationsUpdate() gin.HandlerFunc {
 
 func (g ginEngine) applicationsFind() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		action.HealthCheck(c.Writer, c.Request)
+		var (
+			uc = usecase.NewFindApplicationInteractor(
+				repository.NewApplicationSQL(g.db),
+				presenter.NewFindApplicationPresenter(),
+				g.ctxTimeout,
+			)
+
+			act = action.NewFindApplicationAction(uc, g.log)
+			id  = usecase.FindApplicationInput(uuid.MustParse(c.Param("id")))
+		)
+
+		act.Execute(c.Writer, c.Request, id)
 	}
 }
 

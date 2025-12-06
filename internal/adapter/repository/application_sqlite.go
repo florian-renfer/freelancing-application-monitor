@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/florian-renfer/freelancing-application-monitor/internal/domain"
-
 	"github.com/google/uuid"
+
 	"github.com/pkg/errors"
 )
 
@@ -89,4 +89,35 @@ func (a ApplicationSQL) FindAll(ctx context.Context) ([]domain.Application, erro
 	}
 
 	return applications, nil
+}
+
+func (a ApplicationSQL) FindById(ctx context.Context, applicationId uuid.UUID) (domain.Application, error) {
+	var query = "SELECT * FROM applications where id = $1"
+
+	var (
+		id          uuid.UUID
+		title       string
+		description string
+		url         string
+		state       domain.ApplicationState
+		appliedAt   time.Time
+		createdAt   time.Time
+		updatedAt   time.Time
+	)
+
+	row := a.db.QueryRowContext(ctx, query, applicationId)
+	if err := row.Scan(&id, &title, &description, &url, &state, &appliedAt, &createdAt, &updatedAt); err != nil {
+		return domain.Application{}, errors.Wrap(err, "error finding application by id")
+	}
+
+	return domain.NewApplication(
+		id,
+		title,
+		description,
+		url,
+		state,
+		appliedAt,
+		createdAt,
+		updatedAt,
+	), nil
 }

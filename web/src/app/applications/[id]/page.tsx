@@ -6,6 +6,7 @@ import {
   CheckCircleIcon,
   CreditCardIcon,
   ExternalLinkIcon,
+  FilePenIcon,
   PaperclipIcon,
   UserCircleIcon,
 } from "lucide-react";
@@ -20,6 +21,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Application } from "@/types/application";
+import { Badge } from "@/components/ui/badge";
 
 const invoice = {
   subTotal: "$8,800.00",
@@ -146,13 +149,13 @@ export default async function ApplicationDetailsPage({
 }) {
   const { id } = await params;
 
-  // const data = await fetch(`${process.env.API_BASE_URL}/applications/${id}`);
-  // const application = (await data.json()) as Application;
+  const data = await fetch(`${process.env.API_BASE_URL}/applications/${id}`);
+  const application = (await data.json()) as Application;
 
   return (
     <>
       <header className="relative isolate">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="py-10">
           <div className="pb-6 flex gap-4 items-center">
             <Button variant="secondary" asChild>
               <Link href="/applications">
@@ -178,18 +181,27 @@ export default async function ApplicationDetailsPage({
                   </span>
                 </div>
                 <div className="mt-1 text-base font-semibold text-gray-900 dark:text-white">
-                  Tuple, Inc
+                  {application.title}
                 </div>
               </h1>
             </div>
-            <div className="flex items-center gap-x-4 sm:gap-x-6">
+            <div className="flex items-center gap-x-4">
               <Button variant="secondary" asChild>
-                <Link href={id} target="_blank" rel="noopener noreferrer">
+                <Link
+                  href={application.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Open URL
                   <ExternalLinkIcon className="ml-2 size-4" />
                 </Link>
               </Button>
-              <Button>Edit</Button>
+              <Button asChild>
+                <Link href={`/applications/${id}/edit`}>
+                  Edit
+                  <FilePenIcon className="ml-2 size-4" />
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -203,16 +215,22 @@ export default async function ApplicationDetailsPage({
             <dl className="flex flex-wrap">
               <div className="flex-auto pt-6 pl-6">
                 <dt className="text-sm/6 font-semibold text-gray-900 dark:text-white">
-                  Amount
+                  Hourly Rate
                 </dt>
                 <dd className="mt-1 text-base font-semibold text-gray-900 dark:text-white">
-                  $10,560.00
+                  € 130.00
                 </dd>
               </div>
               <div className="flex-none self-end px-6 pt-4">
                 <dt className="sr-only">Status</dt>
-                <dd className="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-600 ring-1 ring-green-600/20 ring-inset dark:bg-green-500/10 dark:text-green-500 dark:ring-green-500/30">
-                  Paid
+                <dd>
+                  <Badge
+                    variant={
+                      application.state.toLowerCase() as "draft" | "applied"
+                    }
+                  >
+                    {application.state}
+                  </Badge>
                 </dd>
               </div>
               <div className="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-900/5 px-6 pt-6 dark:border-white/10">
@@ -224,20 +242,25 @@ export default async function ApplicationDetailsPage({
                   />
                 </dt>
                 <dd className="text-sm/6 font-medium text-gray-900 dark:text-white">
-                  Alex Curren
+                  Renfer, Florian
                 </dd>
               </div>
               <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
                 <dt className="flex-none">
-                  <span className="sr-only">Due date</span>
+                  <span className="sr-only">Applied on</span>
                   <CalendarDaysIcon
                     aria-hidden="true"
                     className="h-6 w-5 text-gray-400 dark:text-gray-500"
                   />
                 </dt>
-                <dd className="text-sm/6 text-gray-500 dark:text-gray-400">
-                  <time dateTime="2023-01-31">January 31, 2023</time>
-                </dd>
+
+                {application.applied_at && (
+                  <dd className="text-sm/6 text-gray-500 dark:text-gray-400">
+                    <time dateTime={application.applied_at.toString()}>
+                      {application.applied_at.toString()}
+                    </time>
+                  </dd>
+                )}
               </div>
               <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
                 <dt className="flex-none">
@@ -248,7 +271,14 @@ export default async function ApplicationDetailsPage({
                   />
                 </dt>
                 <dd className="text-sm/6 text-gray-500 dark:text-gray-400">
-                  Paid with MasterCard
+                  Applied via{" "}
+                  <Link
+                    href={application.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {application.url}
+                  </Link>
                 </dd>
               </div>
             </dl>
@@ -266,24 +296,32 @@ export default async function ApplicationDetailsPage({
         {/* Invoice */}
         <div className="-mx-4 px-4 py-8 shadow-xs ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-14 lg:col-span-2 lg:row-span-2 lg:row-end-2 xl:px-16 xl:pt-16 xl:pb-20 dark:shadow-none dark:ring-white/10">
           <h2 className="text-base font-semibold text-gray-900 dark:text-white">
-            Invoice
+            Application
           </h2>
           <dl className="mt-6 grid grid-cols-1 text-sm/6 sm:grid-cols-2">
             <div className="sm:pr-4">
               <dt className="inline text-gray-500 dark:text-gray-400">
-                Issued on
+                Applied on
               </dt>{" "}
-              <dd className="inline text-gray-700 dark:text-gray-300">
-                <time dateTime="2023-23-01">January 23, 2023</time>
-              </dd>
+              {application.applied_at && (
+                <dd className="inline text-gray-700 dark:text-gray-300">
+                  <time dateTime={application.applied_at.toString()}>
+                    {application.applied_at.toString()}
+                  </time>
+                </dd>
+              )}
             </div>
             <div className="mt-2 sm:mt-0 sm:pl-4">
               <dt className="inline text-gray-500 dark:text-gray-400">
-                Due on
+                Created on
               </dt>{" "}
-              <dd className="inline text-gray-700 dark:text-gray-300">
-                <time dateTime="2023-31-01">January 31, 2023</time>
-              </dd>
+              {application.created_at && (
+                <dd className="inline text-gray-700 dark:text-gray-300">
+                  <time dateTime={application.created_at.toString()}>
+                    {application.created_at.toLocaleString()}
+                  </time>
+                </dd>
+              )}
             </div>
             <div className="mt-6 border-t border-gray-900/5 pt-6 sm:pr-4 dark:border-white/10">
               <dt className="font-semibold text-gray-900 dark:text-white">
@@ -305,7 +343,7 @@ export default async function ApplicationDetailsPage({
               </dt>
               <dd className="mt-2 text-gray-500 dark:text-gray-400">
                 <span className="font-medium text-gray-900 dark:text-white">
-                  Tuple, Inc
+                  {application.title}{" "}
                 </span>
                 <br />
                 886 Walter Street
