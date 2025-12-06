@@ -117,10 +117,8 @@ curl -X POST http://localhost:4000/v1/auth/register\
   }' | jq
 ```
 
-````
-
 #### Delete User
 
 ```bash
 curl -X DELETE http://localhost:4000/v1/users/{user_id} | jq
-````
+```
