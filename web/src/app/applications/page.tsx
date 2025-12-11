@@ -1,6 +1,5 @@
-import { CreateApplicationForm } from "@/components/create-application-form";
+import { CreateApplicationForm } from "@/components/form/create-application";
 import { Badge } from "@/components/ui/badge";
-
 import { Button } from "@/components/ui/button";
 
 import {
@@ -109,11 +108,11 @@ function ApplicationList({ applications }: ApplicationListProps) {
                     <Badge
                       variant={
                         application.state.toLowerCase() as
-                          | "default"
-                          | "secondary"
-                          | "destructive"
-                          | "outline"
-                          | "applied"
+                        | "default"
+                        | "secondary"
+                        | "destructive"
+                        | "outline"
+                        | "applied"
                       }
                     >
                       <BadgeCheckIcon />
@@ -145,23 +144,47 @@ export default async function Applications() {
       <header>
         <div className="flex justify-between">
           <h1>Applications</h1>
-          <Button>
-            <PlusCircleIcon />
-            Create Application
-          </Button>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button >
+                <PlusCircleIcon />
+                Create Application
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Create Application</DialogTitle>
+                <DialogDescription>
+                  Keep track of a new Application. We are going to do the heavy
+                  lifting for you by checking for duplicates with our
+                  AI-powered engine.
+                </DialogDescription>
+              </DialogHeader>
+              <CreateApplicationForm />
+              <DialogFooter className="sm:justify-start">
+                <DialogClose asChild>
+                  <Button type="button" variant="secondary">
+                    Discard
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
         <p className="text-muted-foreground">
           Manage all of your applications in one place. Create new ones or
           update existing ones.
         </p>
         <Separator className="mt-4" />
-      </header>
+      </header >
 
       {applications && applications.length > 0 ? (
         <ApplicationList applications={applications} />
       ) : (
         <EmptyState />
-      )}
+      )
+      }
     </>
   );
 }

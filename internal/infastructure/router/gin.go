@@ -96,17 +96,9 @@ func (g ginEngine) setAppHandlers(router *gin.Engine) {
 	router.GET("/v1/users/:id", g.usersFind())
 	router.DELETE("/v1/users/:id", g.usersDelete())
 
-	// Projects
-	router.GET("/v1/projects", g.projectsFindAll())
-	router.POST("/v1/projects", g.projectsCreate())
-	router.PUT("/v1/projects/:id", g.projectsUpdate())
-	router.GET("/v1/projects/:id", g.projectsFind())
-	router.DELETE("/v1/projects/:id", g.projectsDelete())
-
 	// Applications
 	router.GET("/v1/applications", g.applicationsFindAll())
 	router.POST("/v1/applications", g.applicationsCreate())
-	router.PUT("/v1/applications/:id", g.applicationsUpdate())
 	router.GET("/v1/applications/:id", g.applicationsFind())
 	router.DELETE("/v1/applications/:id", g.applicationsDelete())
 
@@ -183,36 +175,6 @@ func (g ginEngine) usersDelete() gin.HandlerFunc {
 		)
 
 		act.Execute(c.Writer, c.Request, id)
-	}
-}
-
-func (g ginEngine) projectsFindAll() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		action.HealthCheck(c.Writer, c.Request)
-	}
-}
-
-func (g ginEngine) projectsCreate() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		action.HealthCheck(c.Writer, c.Request)
-	}
-}
-
-func (g ginEngine) projectsUpdate() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		action.HealthCheck(c.Writer, c.Request)
-	}
-}
-
-func (g ginEngine) projectsFind() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		action.HealthCheck(c.Writer, c.Request)
-	}
-}
-
-func (g ginEngine) projectsDelete() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		action.HealthCheck(c.Writer, c.Request)
 	}
 }
 

@@ -19,4 +19,4 @@ type Application = {
   updated_at: Date | null;
 };
 
-export { Application, ApplicationState };
+export { type Application, ApplicationState };

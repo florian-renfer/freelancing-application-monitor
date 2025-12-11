@@ -1,3 +1,4 @@
+import { CreateApplicationForm } from "@/components/form/create-application";
 import { Application } from "@/types/application";
 
 export default async function ApplicationDetailsPage({
@@ -13,15 +14,8 @@ export default async function ApplicationDetailsPage({
   return (
     <div>
       <h1>Application Details</h1>
-      <p>
-        <strong>ID:</strong> {application.id}
-      </p>
-      <p>
-        <strong>Name:</strong> {application.title}
-      </p>
-      <p>
-        <strong>Description:</strong> {application.description}
-      </p>
+
+      <CreateApplicationForm />
     </div>
   );
 }
